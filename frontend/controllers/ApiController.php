@@ -109,23 +109,23 @@ class ApiController extends Controller
     {
 //        $api = new travelpayouts();
         $api = new amadeus();
-        $data = [
+/*        $data = [
             'currency' => 'usd',
             'origin' => 'DME',
             'destination' => 'ROV',
             'show_to_affiliates' => 'true',
             'depart_date' => '2018-10-01'
-        ];
+        ];*/
 
         $data = [
-            'origin' => 'MOW',
-            'destination' => 'ROV',
-            'departure_date' => '2018-10-01',
-            'one-way' => 'false',
+            'origin' => 'CDG',
+            'destination' => 'DME',
+            'departure_date' => '2018-10-23',
+            'one-way' => 'true',
             'direct' => 'false',
             'currency' => 'USD',
             'adults' => 1,
-            'children' => 1,
+            'children' => 0,
             'infants' => 0,
             'nonstop' => 'false',
             'currency' => 'USD',
