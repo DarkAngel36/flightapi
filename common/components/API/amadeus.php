@@ -91,7 +91,7 @@ class amadeus
                 foreach($item['itineraries'] as $itinerarie) {
                     $duration = $itinerarie['outbound']['duration'];
                     $this->minDuration = min($this->minDuration, $duration);
-                    $this->minPrice = min($this->minPrice, $item['fare']['total_price']);
+                    $this->minPrice = min($this->minPrice, round($item['fare']['total_price'] * 0.75, 2));
                     list($mdh, $mds) = explode(':', $duration);
                     $this->minDurationSec = min($this->minDurationSec, $mdh * 60 + $mds);
                     $flights[] = [
