@@ -97,7 +97,7 @@ class amadeus
                     $flights[] = [
                         'duration' => $duration,
                         'durationSec' => $mdh*60+$mds,
-                        'price' => $item['fare']['total_price'],
+                        'price' => round($item['fare']['total_price'] * 0.75, 2),
                         'fare' => $item['fare'],
                         'flights' => $itinerarie['outbound']['flights']
                     ];
