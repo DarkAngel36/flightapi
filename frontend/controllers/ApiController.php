@@ -15,6 +15,7 @@ use frontend\models\ResetPasswordForm;
 use frontend\models\SignupForm;
 use frontend\models\ContactForm;
 use common\components\API\travelpayouts;
+use yii\web\Response;
 
 class ApiController extends Controller
 {
@@ -115,7 +116,7 @@ class ApiController extends Controller
             'destination' => 'ROV',
             'show_to_affiliates' => 'true',
             'depart_date' => '2018-10-01'
-        ];*/
+        ];
 
         $data = [
             'origin' => 'CDG',
@@ -130,14 +131,30 @@ class ApiController extends Controller
             'nonstop' => 'false',
             'currency' => 'USD',
             'travel_class' => 'ECONOMY'
+        ];*/
+        $data = [
+            'origin' => Yii::$app->request->get('origin', null),
+            'destination' => Yii::$app->request->get('destination', null),
+            'departure_date' => Yii::$app->request->get('departure_date', null),
+            'one-way' => Yii::$app->request->get('one-way', 'true'),
+            'direct' => Yii::$app->request->get('direct', 'false'),
+            'currency' => Yii::$app->request->get('currency', 'USD'),
+            'adults' => Yii::$app->request->get('adults', 1),
+            'children' => Yii::$app->request->get('children', 0),
+            'infants' => Yii::$app->request->get('infants', 0),
+            'nonstop' => Yii::$app->request->get('nonstop', 'false'),
+            'travel_class' => Yii::$app->request->get('', 'ECONOMY'),
         ];
 
         $result = $api->getDirect($data);
 
-        echo '<pre>';
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        /*echo '<pre>';
         print_r($result);
         echo '</pre>';
-        die();
+        die();*/
+        return $result;
     }
 
     public function actionCalendar()

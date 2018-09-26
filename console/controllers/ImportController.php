@@ -38,7 +38,7 @@ class ImportController extends Controller
         Aviacompanies::deleteAll();
         $json = file_get_contents('http://api.travelpayouts.com/data/airlines.json');
         $airports = json_decode($json, true);
-print_r($airports);die();
+
         foreach ($airports as $item) {
             $item['name'] = $item['name_translations']['en'];
             $item['name_translations'] = json_encode($item['name_translations']);
