@@ -3,6 +3,7 @@
 namespace frontend\controllers;
 
 use common\components\API\amadeus;
+use common\models\Airports;
 use Yii;
 use yii\base\InvalidParamException;
 use yii\web\BadRequestHttpException;
@@ -30,7 +31,7 @@ class ApiController extends Controller
                 'only' => ['cheap'],
                 'rules' => [
                     [
-                        'actions' => ['signup', 'cheap', 'direct'],
+                        'actions' => ['signup', 'cheap', 'direct', 'airports'],
                         'allow' => true,
                         'roles' => ['?'],
                     ],
@@ -64,6 +65,12 @@ class ApiController extends Controller
                 'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
             ],
         ];
+    }
+
+    public function actionAirports()
+    {
+        Yii::$app->response->format = Response::FORMAT_JSONP;
+        return ['callback' => Yii::$app->request->get('callback'), 'data' => Airports::find()->orderBy('city_code')/*->limit(20)*/->all() ];
     }
 
     /**
