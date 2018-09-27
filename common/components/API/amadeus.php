@@ -9,6 +9,10 @@
 namespace common\components\API;
 
 
+use common\models\Airports;
+use common\models\Aviacompanies;
+use yii\helpers\ArrayHelper;
+
 class amadeus
 {
     private $apiKey = 'Qqp9cVlvG0ywG2JncjcpcK1XIiMrGpdA';
@@ -65,13 +69,13 @@ class amadeus
 
     public function sortBest($a, $b)
     {
-        $a = $this->minDurationSec / $a['durationSec'] + $this->minPrice / $a['price'];
-        $b = $this->minDurationSec / $b['durationSec'] + $this->minPrice / $b['price'];
+        $a = 0.3 * $this->minDurationSec / $a['durationSec'] + $this->minPrice / $a['price'];
+        $b = 0.3 * $this->minDurationSec / $b['durationSec'] + $this->minPrice / $b['price'];
 
         if ($a == $b) {
             return 0;
         }
-        return ($a < $b) ? -1 : 1;
+        return ($a < $b) ? 1 : -1;
     }
 
     public function getDirect($data)
@@ -120,6 +124,8 @@ class amadeus
             'fastest' => $fastest,
             'cheapest' => $cheapest,
             'best' => $best,
+            'airports' => ArrayHelper::index( Airports::find()->select('code, name, city_code')->asArray()->all(), 'code'),
+            'aviacompanies' => ArrayHelper::index( Aviacompanies::find()->select('code, name')->asArray()->all(), 'code'),
         ];
 
         return $result;

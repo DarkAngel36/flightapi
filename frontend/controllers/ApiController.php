@@ -155,13 +155,15 @@ class ApiController extends Controller
 
         $result = $api->getDirect($data);
 
-        Yii::$app->response->format = Response::FORMAT_JSON;
-
+//        Yii::$app->response->format = Response::FORMAT_JSON;
+        Yii::$app->response->format = Response::FORMAT_JSONP;
         /*echo '<pre>';
         print_r($result);
         echo '</pre>';
         die();*/
-        return $result;
+//        return $result;
+
+        return ['callback' => Yii::$app->request->get('callback'), 'data' => $result ];
     }
 
     public function actionCalendar()
