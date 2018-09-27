@@ -40,6 +40,8 @@ class ImportController extends Controller
         $airports = json_decode($json, true);
 
         foreach ($airports as $item) {
+    	    if(!isset($item['code'])) {print_r($item); die();}
+	    if(!isset($item['name_translations']['en'])) $item['name_translations']['en'] = $item['name'];
             $item['name'] = $item['name_translations']['en'];
             $item['name_translations'] = json_encode($item['name_translations']);
 //            print_r($item);die();
