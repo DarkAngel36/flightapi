@@ -80,7 +80,7 @@ class Cities extends \yii\db\ActiveRecord
             ->select('cities.code, cities.name')
             ->join('INNER JOIN', 'airports', 'airports.city_code = cities.code')
             ->orderBy('cities.country_code')
-            ->groupBy('cities.code, cities.name')
+//            ->groupBy('cities.code, cities.name')
             ->all();
     }
 }
