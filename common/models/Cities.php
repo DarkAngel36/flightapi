@@ -6,29 +6,27 @@ use Yii;
 use yii\behaviors\TimestampBehavior;
 
 /**
- * This is the model class for table "airports".
+ * This is the model class for table "cities".
  *
  * @property int $id
+ * @property string $code
  * @property string $name
+ * @property string $coordinates
  * @property string $time_zone
  * @property string $name_translations
  * @property string $country_code
- * @property string $city_code
- * @property string $code
- * @property int $flightable
- * @property string $coordinates
  * @property int $status
  * @property int $created_at
  * @property int $updated_at
  */
-class Airports extends \yii\db\ActiveRecord
+class Cities extends \yii\db\ActiveRecord
 {
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return 'airports';
+        return 'cities';
     }
 
     public function behaviors()
@@ -44,11 +42,11 @@ class Airports extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name'], 'required'],
-            [['name_translations', 'coordinates'], 'string'],
-            [['flightable', 'status', 'created_at', 'updated_at'], 'integer'],
-            [['name', 'time_zone'], 'string', 'max' => 255],
-            [['country_code', 'city_code', 'code'], 'string', 'max' => 3],
+            [['code'], 'required'],
+            [['coordinates', 'name_translations'], 'string'],
+            [['status', 'created_at', 'updated_at'], 'integer'],
+            [['code', 'name', 'time_zone'], 'string', 'max' => 255],
+            [['country_code'], 'string', 'max' => 5],
         ];
     }
 
@@ -59,27 +57,29 @@ class Airports extends \yii\db\ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
+            'code' => Yii::t('app', 'Code'),
             'name' => Yii::t('app', 'Name'),
+            'coordinates' => Yii::t('app', 'Coordinates'),
             'time_zone' => Yii::t('app', 'Time Zone'),
             'name_translations' => Yii::t('app', 'Name Translations'),
             'country_code' => Yii::t('app', 'Country Code'),
-            'city_code' => Yii::t('app', 'City Code'),
-            'code' => Yii::t('app', 'Code'),
-            'flightable' => Yii::t('app', 'Flightable'),
-            'coordinates' => Yii::t('app', 'Coordinates'),
             'status' => Yii::t('app', 'Status'),
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
         ];
     }
 
-    public function getCity()
+    public function getAirports()
     {
-        return $this->hasOne(Cities::className(), ['code' => 'city_code']);
+        return $this->hasMany(Airports::className(), ['city_code' => 'code']);
     }
 
-    public function getCountry()
+    public static function getCitiesWithAirports()
     {
-        return $this->hasOne(Countries::className(), ['code' => 'country_code']);
+        return self::find()
+            ->select('cities.code, cities.name')
+            ->join('INNER JOIN', 'airports', 'airports.city_code = cities.code')
+            ->orderBy('cities.country_code')
+            ->all();
     }
 }

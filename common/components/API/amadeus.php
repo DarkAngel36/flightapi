@@ -126,6 +126,7 @@ class amadeus
             'best' => $best,
             'airports' => ArrayHelper::index( Airports::find()->select('code, name, city_code')->asArray()->all(), 'code'),
             'aviacompanies' => ArrayHelper::index( Aviacompanies::find()->select('code, name')->asArray()->all(), 'code'),
+            'cities' => ArrayHelper::index( Cities::find()->select('code, name, city_code')->asArray()->all(), 'code'),
         ];
 
         return $result;

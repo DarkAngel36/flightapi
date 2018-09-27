@@ -10,14 +10,20 @@ namespace console\controllers;
 
 use common\models\Airports;
 use common\models\Aviacompanies;
+use common\models\Cities;
+use common\models\Countries;
+use common\models\Planes;
 use yii\console\Controller;
 
 class ImportController extends Controller
 {
     public function actionIndex()
     {
-        $this->actionAirports();
-        $this->actionAviacompanies();
+//        $this->actionAirports();
+//        $this->actionAviacompanies();
+        $this->actionCountries();
+        $this->actionCities();
+        $this->actionPlanes();
     }
 
     public function actionAirports()
@@ -51,6 +57,44 @@ class ImportController extends Controller
             $model->name_translations = $item['name_translations'];
 
             if(!$model->save()) print_r($model->errors);
+        }
+    }
+
+    public function actionCountries()
+    {
+        Countries::deleteAll();
+        $json = file_get_contents('http://api.travelpayouts.com/data/countries.json');
+        $airports = json_decode($json, true);
+        foreach ($airports as $item) {
+            $item['name_translations'] = json_encode($item['name_translations']);
+
+            $model = new Countries($item);
+            $model->save();
+        }
+    }
+
+    public function actionCities()
+    {
+        Cities::deleteAll();
+        $json = file_get_contents('http://api.travelpayouts.com/data/cities.json');
+        $airports = json_decode($json, true);
+        foreach ($airports as $item) {
+            $item['name_translations'] = json_encode($item['name_translations']);
+            $item['coordinates'] = json_encode($item['coordinates']);
+            $model = new Cities($item);
+            $model->save();
+        }
+    }
+
+    public function actionPlanes()
+    {
+        Planes::deleteAll();
+        $json = file_get_contents('http://api.travelpayouts.com/data/planes.json');
+        $airports = json_decode($json, true);
+
+        foreach ($airports as $item) {
+            $model = new Planes($item);
+            $model->save();
         }
     }
 }
