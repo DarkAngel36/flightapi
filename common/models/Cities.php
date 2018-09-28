@@ -77,10 +77,12 @@ class Cities extends \yii\db\ActiveRecord
     public static function getCitiesWithAirports()
     {
         return self::find()
-            ->select('cities.code, cities.name')
+            ->select(['cities.code', 'cities.name', 'cities.country_code'])
+//            ->distinct()
             ->join('INNER JOIN', 'airports', 'airports.city_code = cities.code')
+            ->groupBy(['cities.code', 'cities.name', 'cities.country_code'])
             ->orderBy('cities.country_code')
-//            ->groupBy('cities.code, cities.name')
+
             ->all();
     }
 }
