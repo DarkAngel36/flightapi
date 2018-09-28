@@ -12,6 +12,7 @@ namespace common\components\API;
 use common\models\Airports;
 use common\models\Aviacompanies;
 use yii\helpers\ArrayHelper;
+use common\models\Cities;
 
 class amadeus
 {
