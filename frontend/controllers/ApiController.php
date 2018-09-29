@@ -73,7 +73,7 @@ class ApiController extends Controller
         Yii::$app->response->format = Response::FORMAT_JSONP;
         return [
             'callback' => Yii::$app->request->get('callback'),
-            'data' => Cities::getCitiesWithAirports() ];
+            'data' => [ 'results' => Cities::getCitiesWithAirports(Yii::$app->request->get('q', '----')) ]];
     }
 
     /**
