@@ -74,7 +74,7 @@ class Cities extends \yii\db\ActiveRecord
         return $this->hasMany(Airports::className(), ['city_code' => 'code']);
     }
 
-    public static function getCitiesWithAirports($q)
+    public static function getCitiesWithAirports($q, $value = '')
     {
         $cache = Yii::$app->cache;
         if($cache->exists('CitiesWithAirports1')) {
@@ -97,13 +97,19 @@ GROUP BY airports.code, cities.name, cities.country_code, countries.name, airpor
 ) AS qry
 ORDER BY `name`';*/
             $sql = 'SELECT `code` as id, `name` as `text` FROM all_airports WHERE `name` LIKE "%'.$q.'%"';
-
+            if(!empty($value)) {
+                $sql .= ' OR `name` LIKE "%['.$value.']%" LIMIT 1';
+            }
             $connection = Yii::$app->getDb();
 
             $command = $connection->createCommand($sql);
 
             $results = $command->queryAll();
-            $cache->set('CitiesWithAirports', $results);
+            if(!empty($value) && count($results)) {
+                $results[0]['selected'] = 'true';
+            }
+//            die(print_r($results));
+//            $cache->set('CitiesWithAirports', $results);
         }
 
         return $results;
