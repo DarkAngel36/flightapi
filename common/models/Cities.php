@@ -76,13 +76,36 @@ class Cities extends \yii\db\ActiveRecord
 
     public static function getCitiesWithAirports()
     {
-        return self::find()
-            ->select(['cities.code', 'cities.name', 'cities.country_code'])
-//            ->distinct()
-            ->join('INNER JOIN', 'airports', 'airports.city_code = cities.code')
-            ->groupBy(['cities.code', 'cities.name', 'cities.country_code'])
-            ->orderBy('cities.country_code')
+        $cache = Yii::$app->cache;
+        if($cache->exists('CitiesWithAirports1')) {
+            $results = $cache->get('CitiesWithAirports');
+        } else {
+            /*$sql = 'SELECT * FROM (
+SELECT cities.code AS `code`, CONCAT(cities.name, ", ", countries.name, ": All airports", " [" , cities.code ,"]") AS `name`
+FROM cities
+INNER JOIN countries ON countries.code = cities.country_code
+INNER JOIN airports ON airports.city_code = cities.code
+WHERE airports.name LIKE "%Airport%"
+GROUP BY cities.name, cities.country_code, countries.name, cities.code
+UNION ALL
+SELECT airports.code AS `code`, CONCAT(cities.name, ", ", countries.name, ": ", airports.name, " [" , airports.code ,"]") AS `name`
+FROM cities
+INNER JOIN airports ON airports.city_code = cities.code
+INNER JOIN countries ON countries.code = cities.country_code
+WHERE airports.name LIKE "%Airport%"
+GROUP BY airports.code, cities.name, cities.country_code, countries.name, airports.name
+) AS qry
+ORDER BY `name`';*/
+            $sql = 'SELECT `code`, `name` FROM all_airports';
 
-            ->all();
+            $connection = Yii::$app->getDb();
+
+            $command = $connection->createCommand($sql);
+
+            $results = $command->queryAll();
+            $cache->set('CitiesWithAirports', $results);
+        }
+
+        return $results;
     }
 }
