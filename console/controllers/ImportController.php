@@ -19,11 +19,12 @@ class ImportController extends Controller
 {
     public function actionIndex()
     {
-//        $this->actionAirports();
-//        $this->actionAviacompanies();
+        $this->actionAirports();
+        $this->actionAviacompanies();
         $this->actionCountries();
         $this->actionCities();
         $this->actionPlanes();
+        $this->actionAllAirports();
     }
 
     public function actionAirports()
