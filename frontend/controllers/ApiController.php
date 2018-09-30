@@ -151,6 +151,7 @@ class ApiController extends Controller
             'origin' => Yii::$app->request->get('origin', null),
             'destination' => Yii::$app->request->get('destination', null),
             'departure_date' => Yii::$app->request->get('departure_date', null),
+            'return_date' => Yii::$app->request->get('return_date', null),
             'one-way' => Yii::$app->request->get('one-way', 'true'),
             'direct' => Yii::$app->request->get('direct', 'false'),
             'currency' => Yii::$app->request->get('currency', 'USD'),
