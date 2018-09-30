@@ -125,7 +125,7 @@ class amadeus
         $planes[] = ['code' => '32B', 'name' => 'A321 (sharklets)'];
         $planes[] = ['code' => '32C', 'name' => 'A318 (sharklets)'];
         $planes[] = ['code' => '32D', 'name' => 'A319 (sharklets)'];
-        $planes[] = ['code' => 'SU9', 'name' => 'Suhoi SuperJet'];
+        $planes[] = ['code' => 'SU9', 'name' => 'Sukhoi SuperJet 100'];
 
         $result = [
             'minPrice' => $this->minPrice,
