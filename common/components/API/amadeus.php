@@ -11,6 +11,7 @@ namespace common\components\API;
 
 use common\models\Airports;
 use common\models\Aviacompanies;
+use common\models\Planes;
 use yii\helpers\ArrayHelper;
 use common\models\Cities;
 
@@ -128,6 +129,7 @@ class amadeus
             'airports' => ArrayHelper::index( Airports::find()->select('code, name, city_code')->asArray()->all(), 'code'),
             'aviacompanies' => ArrayHelper::index( Aviacompanies::find()->select('code, name')->asArray()->all(), 'code'),
             'cities' => ArrayHelper::index( Cities::find()->select('code, name')->asArray()->all(), 'code'),
+            'planes' => ArrayHelper::index( Planes::find()->select('code, name')->asArray()->all(), 'code'),
         ];
 
         return $result;
