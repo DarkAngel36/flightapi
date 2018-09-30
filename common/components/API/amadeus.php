@@ -12,6 +12,7 @@ namespace common\components\API;
 use common\models\Airports;
 use common\models\Aviacompanies;
 use common\models\Planes;
+use phpDocumentor\Reflection\Types\Object_;
 use yii\helpers\ArrayHelper;
 use common\models\Cities;
 
@@ -118,6 +119,13 @@ class amadeus
         usort($best, [$this, 'sortBest']);
         list($mdh, $mds) = explode(':', $this->minDuration);
 
+        $planes = Planes::find()->select('code, name')->asArray()->all();
+
+        $planes[] = ['code' => '32A', 'name' => 'A320 (sharklets)'];
+        $planes[] = ['code' => '32B', 'name' => 'A321 (sharklets)'];
+        $planes[] = ['code' => '32C', 'name' => 'A318 (sharklets)'];
+        $planes[] = ['code' => '32D', 'name' => 'A319 (sharklets)'];
+
         $result = [
             'minPrice' => $this->minPrice,
             'minDuration' => $this->minDuration,
@@ -129,7 +137,7 @@ class amadeus
             'airports' => ArrayHelper::index( Airports::find()->select('code, name, city_code')->asArray()->all(), 'code'),
             'aviacompanies' => ArrayHelper::index( Aviacompanies::find()->select('code, name')->asArray()->all(), 'code'),
             'cities' => ArrayHelper::index( Cities::find()->select('code, name')->asArray()->all(), 'code'),
-            'planes' => ArrayHelper::index( Planes::find()->select('code, name')->asArray()->all(), 'code'),
+            'planes' => ArrayHelper::index( $planes, 'code'),
         ];
 
         return $result;
