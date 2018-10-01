@@ -159,7 +159,7 @@ class ApiController extends Controller
             'children' => Yii::$app->request->get('children', 0),
             'infants' => Yii::$app->request->get('infants', 0),
             'nonstop' => Yii::$app->request->get('nonstop', 'false'),
-            'travel_class' => Yii::$app->request->get('', 'ECONOMY'),
+            'travel_class' => Yii::$app->request->get('travel_class', 'ECONOMY'),
         ];
 
         $result = $api->getDirect($data);
