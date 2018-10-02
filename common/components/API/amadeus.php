@@ -93,6 +93,8 @@ class amadeus
 
         $result = [];
         $flights = [];
+        $existAviacompanies = [];
+        $existAirports = [];
         if($data['status'] == 'success') {
             foreach($data['data']['results'] as $item) {
                 foreach($item['itineraries'] as $itinerarie) {
@@ -108,6 +110,8 @@ class amadeus
                         'fare' => $item['fare'],
                         'flights' => $itinerarie/*['outbound']['flights']*/,
                     ];
+                    $existAviacompanies[] = $itinerarie['outbound']['flights'][0]['operating_airline'];
+                    $existAirports[] = $itinerarie['outbound']['flights'][0]['origin']['airport'];
                 }
             }
         }
@@ -120,6 +124,8 @@ class amadeus
         list($mdh, $mds) = explode(':', $this->minDuration);
 
         $planes = Planes::find()->select('code, name')->asArray()->all();
+
+//        ArrayHelper::
 
         $planes[] = ['code' => '32A', 'name' => 'A320 (sharklets)'];
         $planes[] = ['code' => '32B', 'name' => 'A321 (sharklets)'];
@@ -139,6 +145,8 @@ class amadeus
             'aviacompanies' => ArrayHelper::index( Aviacompanies::find()->select('code, name')->asArray()->all(), 'code'),
             'cities' => ArrayHelper::index( Cities::find()->select('code, name')->asArray()->all(), 'code'),
             'planes' => ArrayHelper::index( $planes, 'code'),
+            'existAviacompanies' => array_values( array_unique( $existAviacompanies ) ),
+            'existAirports' => array_values( array_unique( $existAirports) ),
         ];
 
         return $result;
