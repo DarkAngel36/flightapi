@@ -9,6 +9,7 @@ use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
 use common\widgets\Alert;
+use kartik\nav\NavX;
 
 AppAsset::register($this);
 ?>
@@ -35,9 +36,18 @@ AppAsset::register($this);
             'class' => 'navbar-inverse navbar-fixed-top',
         ],
     ]);
-    $menuItems = [
-        ['label' => 'Home', 'url' => ['/site/index']],
+    $menuItems[] = [
+	    'label' => 'Dictionaries',
+	    'items' => [
+		    ['label' => 'Countries', 'url' => ['/countries']],
+		    ['label' => 'Cities', 'url' => ['/cities']],
+		    ['label' => 'Airports', 'url' => ['/airports']],
+		    ['label' => 'Aviacompanies', 'url' => ['/aviacompanies']],
+		    ['label' => 'Planes', 'url' => ['/planes']],
+	    ],
+     
     ];
+
     if (Yii::$app->user->isGuest) {
         $menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];
     } else {
