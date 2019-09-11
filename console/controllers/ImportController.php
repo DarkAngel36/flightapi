@@ -34,9 +34,12 @@ class ImportController extends Controller
         $airports = json_decode($json, true);
         foreach ($airports as $item) {
             $item['name_translations'] = json_encode($item['name_translations']);
-            $item['coordinates'] = json_encode($item['coordinates']);
-            $model = new Airports($item);
-            $model->save();
+            $item['coordinates']       = json_encode($item['coordinates']);
+	        $item['flightable']        = (int)$item['flightable'];
+            $model                     = new Airports($item);
+	        if (!$model->save()) {
+		        print_r($model->errors);
+	        }
         }
     }
 
