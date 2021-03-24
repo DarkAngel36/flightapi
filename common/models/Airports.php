@@ -49,7 +49,8 @@ class Airports extends \yii\db\ActiveRecord
 	        [['name_translations', 'coordinates'], 'string'],
 	        [['flightable', 'status', 'created_at', 'updated_at'], 'integer'],
 	        [['name', 'time_zone'], 'string', 'max' => 255],
-	        [['country_code', 'city_code', 'code', 'iata_type'], 'string', 'max' => 3],
+	        [['country_code', 'city_code', 'code'], 'string', 'max' => 3],
+	        [['iata_type'], 'string']
         ];
     }
 
