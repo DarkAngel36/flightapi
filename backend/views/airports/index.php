@@ -33,6 +33,7 @@ $this->params['breadcrumbs'][] = $this->title;
 			'time_zone',
 			//            'name_translations:ntext',
 			'country_code',
+			'iata_type',
 			//            'code',
 			//'flightable',
 			//'coordinates:ntext',

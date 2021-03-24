@@ -33,6 +33,7 @@ class ImportController extends Controller
         $json = file_get_contents('http://api.travelpayouts.com/data/airports.json');
         $airports = json_decode($json, true);
         foreach ($airports as $item) {
+        	
             $item['name_translations'] = json_encode($item['name_translations']);
             $item['coordinates']       = json_encode($item['coordinates']);
 	        $item['flightable']        = (int)$item['flightable'];

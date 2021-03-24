@@ -70,15 +70,28 @@ class ApiController extends Controller
 
     public function actionAirports()
     {
-        Yii::$app->response->format = Response::FORMAT_JSONP;
-        return [
-            'callback' => Yii::$app->request->get('callback'),
-            'data' => [
-                'results' => Cities::getCitiesWithAirports(
-                    Yii::$app->request->get('q', '----'),
-                    Yii::$app->request->get('value', ''))
-            ]
-        ];
+        if(Yii::$app->request->isGet) {
+	        Yii::$app->response->format = Response::FORMAT_JSON;
+	        return [
+		        'data' => [
+			        'results' => Cities::getCitiesWithAirports(
+				        Yii::$app->request->get('q', '----'),
+				        Yii::$app->request->get('value', '')
+			        )
+		        ]
+	        ];
+        } else {
+	        Yii::$app->response->format = Response::FORMAT_JSONP;
+	        return [
+		        'callback' => Yii::$app->request->get('callback'),
+		        'data' => [
+			        'results' => Cities::getCitiesWithAirports(
+				        Yii::$app->request->get('q', '----'),
+				        Yii::$app->request->get('value', ''))
+		        ]
+	        ];
+        }
+    	
     }
 
     /**
@@ -107,7 +120,7 @@ class ApiController extends Controller
         $data = [
             'origin' => 'MOW',
             'destination' => 'ROV',
-            'departure_date' => '2018-10-01',
+            'departure_date' => '2021-04-05',
             'one-way' => 'false',
             'direct' => 'false',
             'currency' => 'USD',
@@ -125,6 +138,7 @@ class ApiController extends Controller
     {
 //        $api = new travelpayouts();
         $api = new amadeus();
+        
 /*        $data = [
             'currency' => 'usd',
             'origin' => 'DME',
@@ -132,22 +146,20 @@ class ApiController extends Controller
             'show_to_affiliates' => 'true',
             'depart_date' => '2018-10-01'
         ];
-
+*/
         $data = [
             'origin' => 'CDG',
             'destination' => 'DME',
-            'departure_date' => '2018-10-23',
-            'one-way' => 'true',
-            'direct' => 'false',
-            'currency' => 'USD',
-            'adults' => 1,
-            'children' => 0,
-            'infants' => 0,
-            'nonstop' => 'false',
-            'currency' => 'USD',
-            'travel_class' => 'ECONOMY'
-        ];*/
-        $data = [
+            'departureDate' => '2021-04-10',
+            'oneWay' => 'true',
+            'nonStop' => 'false',
+//            'adults' => 1,
+//            'children' => 0,
+//            'infants' => 0,
+//            'currencyCode' => 'USD',
+//            'travelClass' => 'ECONOMY'
+        ];
+        /*$data = [
             'origin' => Yii::$app->request->get('origin', null),
             'destination' => Yii::$app->request->get('destination', null),
             'departure_date' => Yii::$app->request->get('departure_date', null),
@@ -160,10 +172,10 @@ class ApiController extends Controller
             'infants' => Yii::$app->request->get('infants', 0),
             'nonstop' => Yii::$app->request->get('nonstop', 'false'),
             'travel_class' => Yii::$app->request->get('travel_class', 'ECONOMY'),
-        ];
+        ];*/
 
         $result = $api->getDirect($data);
-
+print_r($result); die();
 //        Yii::$app->response->format = Response::FORMAT_JSON;
         Yii::$app->response->format = Response::FORMAT_JSONP;
         /*echo '<pre>';
@@ -183,12 +195,13 @@ class ApiController extends Controller
             'origin' => 'DME',
             'destination' => 'ROV',
             'show_to_affiliates' => 'true',
-            'departure_date' => '2018-10-01',
-            'return_date' => '2018-10-11',
+            'departure_date' => '2021-04-01',
+//            'return_date' => '2018-10-11',
             'calendar_type' => 'depart_date'
         ];
 
-        $result = $api->getCalendar($data);
+//        $result = $api->getCalendar($data);
+	    $result = $api->getDirect($data);
 
         echo '<pre>';
         print_r($result);

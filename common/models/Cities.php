@@ -105,6 +105,7 @@ ORDER BY `name`';*/
             $command = $connection->createCommand($sql);
 
             $results = $command->queryAll();
+            
             if(!empty($value) && count($results)) {
                 $results[0]['selected'] = 'true';
             }

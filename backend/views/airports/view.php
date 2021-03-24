@@ -39,6 +39,7 @@ $this->params['breadcrumbs'][] = $this->title;
 			'flightable',
 			'coordinates:ntext',
 			'status',
+			'iata_type',
 			'created_at',
 			'updated_at',
 		],

@@ -16,7 +16,7 @@ class AirportssSearch extends Airports {
 	public function rules() {
 		return [
 			[['id', 'flightable', 'status', 'created_at', 'updated_at'], 'integer'],
-			[['name', 'time_zone', 'name_translations', 'country_code', 'city_code', 'code', 'coordinates'], 'safe'],
+			[['name', 'time_zone', 'name_translations', 'country_code', 'city_code', 'code', 'coordinates', 'iata_type'], 'safe'],
 		];
 	}
 	
@@ -67,6 +67,7 @@ class AirportssSearch extends Airports {
 			->andFilterWhere(['like', 'country_code', $this->country_code])
 			->andFilterWhere(['like', 'city_code', $this->city_code])
 			->andFilterWhere(['like', 'code', $this->code])
+			->andFilterWhere(['like', 'iata_type', $this->iata_type])
 			->andFilterWhere(['like', 'coordinates', $this->coordinates]);
 		
 		return $dataProvider;
