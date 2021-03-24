@@ -109,7 +109,7 @@ class amadeus {
 	public function getCheap($data) {
 		$url = 'inspiration-search';
 		
-		return $this->getData($url, $data);
+		return $this->getDataOld($url, $data);
 	}
 	
 	public function sortPrice($a, $b) {
