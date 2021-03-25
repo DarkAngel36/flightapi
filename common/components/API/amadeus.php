@@ -199,6 +199,7 @@ class amadeus {
 				$departure  = [];
 				$arrival    = [];
 				$operating = [];
+				
 				foreach ($item['itineraries'] as $itinerarie) {
 					foreach ($itinerarie['segments'] as $counter => $segment) {
 						if ($counter == 0) {
@@ -234,20 +235,21 @@ class amadeus {
 					
 					$this->minDurationSec = $this->minDuration * 60;
 					
+					$flights[] = [
+						'duration'         => $durationStr,
+						'durationSec'      => +$duration * 60,
+						'price'            => round($item['price']['total'] * 0.75, 2),
+						'price'            => $item['price'],
+						'travelerPricings' => $item['travelerPricings'],
+						'itineraries'      => $item['itineraries'],
+						'priceData'        => $item['price'],
+						'pricingOptions'   => $item['pricingOptions'],
+						'departure'        => $departure,
+						'arrival'          => $arrival,
+						'operating'        => array_unique($operating),
+					];
 				}
-				$flights[] = [
-					'duration'         => $durationStr,
-					'durationSec'      => +$duration * 60,
-					'price'            => round($item['price']['total'] * 0.75, 2),
-					'price'            => $item['price'],
-					'travelerPricings' => $item['travelerPricings'],
-					'itineraries'      => $item['itineraries'],
-					'priceData'        => $item['price'],
-					'pricingOptions'   => $item['pricingOptions'],
-					'departure'        => $departure,
-					'arrival'          => $arrival,
-					'operating'        => array_unique($operating),
-				];
+				
 			}
 		}
 		$fastest  = $flights;
@@ -284,6 +286,7 @@ class amadeus {
 			'existAirports'      => array_values(array_unique($existAirports)),
 			'dictionaries'       => $data['dictionaries'] ?? [],
 			'meta'               => $data['meta'] ?? [],
+			'errors'             => $data['errors'] ?? [],
 		];
 		
 		return $result;

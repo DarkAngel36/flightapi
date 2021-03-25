@@ -166,27 +166,8 @@ class ApiController extends Controller
 	    }
 //        $api = new travelpayouts();
         $api = new amadeus();
+    	$data = [];
         
-/*        $data = [
-            'currency' => 'usd',
-            'origin' => 'DME',
-            'destination' => 'ROV',
-            'show_to_affiliates' => 'true',
-            'depart_date' => '2018-10-01'
-        ];
-*/
-        $data = [
-            'originLocationCode' => 'CDG',
-            'destinationLocationCode' => 'DME',
-            'departureDate' => '2021-04-10',
-//            'oneWay' => 'true',
-            'nonStop' => 'false',
-            'adults' => 1,
-//            'children' => 0,
-//            'infants' => 0,
-//            'currencyCode' => 'USD',
-            'travelClass' => 'ECONOMY'
-        ];
 	    if(Yii::$app->request->isGet) {
 		    Yii::$app->response->format = Response::FORMAT_JSON;
 		
@@ -194,29 +175,21 @@ class ApiController extends Controller
 			    'originLocationCode' => Yii::$app->request->get('origin', null),
 			    'destinationLocationCode' => Yii::$app->request->get('destination', null),
 			    'departureDate' => Yii::$app->request->get('departure_date', null),
-//			    'returnDate' => Yii::$app->request->get('return_date', null),
-			    //            'one-way' => Yii::$app->request->get('one-way', 'true'),
-			    //            'direct' => Yii::$app->request->get('direct', 'false'),
+			    'returnDate' => Yii::$app->request->get('return_date', null),
 			    'currencyCode' => Yii::$app->request->get('currency', 'USD'),
-			    'adults' => Yii::$app->request->get('adults', 1),
-			    'children' => Yii::$app->request->get('children', 0),
-			    'infants' => Yii::$app->request->get('infants', 0),
+			    'adults' => (int)Yii::$app->request->get('adults', 1),
+			    'children' => (int)Yii::$app->request->get('children', 0),
+			    'infants' => (int)Yii::$app->request->get('infants', 0),
 			    'nonStop' => Yii::$app->request->get('nonstop', 'false'),
 			    'travelClass' => Yii::$app->request->get('travel_class', 'ECONOMY'),
 		    ];
+		    
+		    if(strtotime($data['returnDate']) < strtotime($data['departureDate'])) {
+			    $data['returnDate'] = null;
+		    }
 	    }
         
         $result = $api->getDirect($data);
-	    
-	    
-
-//        Yii::$app->response->format = Response::FORMAT_JSON;
-//        Yii::$app->response->format = Response::FORMAT_JSONP;
-        /*echo '<pre>';
-        print_r($result);
-        echo '</pre>';
-        die();*/
-//        return $result;
 
         return ['callback' => Yii::$app->request->get('callback', null), 'data' => $result ];
     }
