@@ -49,6 +49,24 @@ class ApiController extends Controller
                     'logout' => ['post'],
                 ],
             ],
+            'corsFilter' => [
+	            'class' => \yii\filters\Cors::className(),
+	            'cors' => [
+		            // restrict access to
+		            'Origin' => ['*'],
+		            // Allow only POST and PUT methods
+		            'Access-Control-Request-Method' => ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS'],
+		            // Allow only headers 'X-Wsse'
+		            'Access-Control-Request-Headers' => ['X-Wsse'],
+		            // Allow credentials (cookies, authorization headers, etc.) to be exposed to the browser
+//		            'Access-Control-Allow-Credentials' => true,
+		            // Allow OPTIONS caching
+		            'Access-Control-Max-Age' => 3600,
+		            // Allow the X-Pagination-Current-Page header to be exposed to the browser.
+		            'Access-Control-Expose-Headers' => ['X-Pagination-Current-Page'],
+	            ],
+
+            ],
         ];
     }
 
@@ -65,8 +83,15 @@ class ApiController extends Controller
                 'class' => 'yii\captcha\CaptchaAction',
                 'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
             ],
+            'options' => [
+	            'class' => 'yii\rest\OptionsAction',
+            ],
         ];
     }
+	
+	public function actionOptions() {
+	
+	}
 
     public function actionAirports()
     {
@@ -136,6 +161,9 @@ class ApiController extends Controller
 
     public function actionDirect()
     {
+    	if(Yii::$app->request->isOptions) {
+    		die();
+	    }
 //        $api = new travelpayouts();
         $api = new amadeus();
         
@@ -148,43 +176,49 @@ class ApiController extends Controller
         ];
 */
         $data = [
-            'origin' => 'CDG',
-            'destination' => 'DME',
+            'originLocationCode' => 'CDG',
+            'destinationLocationCode' => 'DME',
             'departureDate' => '2021-04-10',
-            'oneWay' => 'true',
+//            'oneWay' => 'true',
             'nonStop' => 'false',
-//            'adults' => 1,
+            'adults' => 1,
 //            'children' => 0,
 //            'infants' => 0,
 //            'currencyCode' => 'USD',
-//            'travelClass' => 'ECONOMY'
+            'travelClass' => 'ECONOMY'
         ];
-        /*$data = [
-            'origin' => Yii::$app->request->get('origin', null),
-            'destination' => Yii::$app->request->get('destination', null),
-            'departure_date' => Yii::$app->request->get('departure_date', null),
-            'return_date' => Yii::$app->request->get('return_date', null),
-            'one-way' => Yii::$app->request->get('one-way', 'true'),
-            'direct' => Yii::$app->request->get('direct', 'false'),
-            'currency' => Yii::$app->request->get('currency', 'USD'),
-            'adults' => Yii::$app->request->get('adults', 1),
-            'children' => Yii::$app->request->get('children', 0),
-            'infants' => Yii::$app->request->get('infants', 0),
-            'nonstop' => Yii::$app->request->get('nonstop', 'false'),
-            'travel_class' => Yii::$app->request->get('travel_class', 'ECONOMY'),
-        ];*/
-
+	    if(Yii::$app->request->isGet) {
+		    Yii::$app->response->format = Response::FORMAT_JSON;
+		
+		    $data = [
+			    'originLocationCode' => Yii::$app->request->get('origin', null),
+			    'destinationLocationCode' => Yii::$app->request->get('destination', null),
+			    'departureDate' => Yii::$app->request->get('departure_date', null),
+//			    'returnDate' => Yii::$app->request->get('return_date', null),
+			    //            'one-way' => Yii::$app->request->get('one-way', 'true'),
+			    //            'direct' => Yii::$app->request->get('direct', 'false'),
+			    'currencyCode' => Yii::$app->request->get('currency', 'USD'),
+			    'adults' => Yii::$app->request->get('adults', 1),
+			    'children' => Yii::$app->request->get('children', 0),
+			    'infants' => Yii::$app->request->get('infants', 0),
+			    'nonStop' => Yii::$app->request->get('nonstop', 'false'),
+			    'travelClass' => Yii::$app->request->get('travel_class', 'ECONOMY'),
+		    ];
+	    }
+        
         $result = $api->getDirect($data);
-print_r($result); die();
+	    
+	    
+
 //        Yii::$app->response->format = Response::FORMAT_JSON;
-        Yii::$app->response->format = Response::FORMAT_JSONP;
+//        Yii::$app->response->format = Response::FORMAT_JSONP;
         /*echo '<pre>';
         print_r($result);
         echo '</pre>';
         die();*/
 //        return $result;
 
-        return ['callback' => Yii::$app->request->get('callback'), 'data' => $result ];
+        return ['callback' => Yii::$app->request->get('callback', null), 'data' => $result ];
     }
 
     public function actionCalendar()
