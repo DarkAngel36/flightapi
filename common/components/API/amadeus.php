@@ -196,11 +196,12 @@ class amadeus {
 		//        print_r($data);die();
 		if (!empty($data['data'])) {
 			foreach ($data['data'] as $item) {
-				$departure  = [];
-				$arrival    = [];
 				$operating = [];
-				
+				$tmp_flights = [];
 				foreach ($item['itineraries'] as $itinerarie) {
+					$departure = [];
+					$arrival   = [];
+					
 					foreach ($itinerarie['segments'] as $counter => $segment) {
 						if ($counter == 0) {
 							$departure = $segment['departure'];
@@ -208,8 +209,8 @@ class amadeus {
 						else if ($counter == (count($itinerarie['segments']) - 1)) {
 							$arrival = $segment['arrival'];
 						}
-						if(empty($arrival)) {
-							$arrival = $itinerarie['segments'][count($itinerarie['segments'])-1]['arrival'];
+						if (empty($arrival)) {
+							$arrival = $itinerarie['segments'][count($itinerarie['segments']) - 1]['arrival'];
 						}
 						$operating[] = $segment['operating']['carrierCode'];
 					}
@@ -231,25 +232,33 @@ class amadeus {
 					if ($duration == $this->minDuration) {
 						$this->minDurationStr = $durationStr;
 					}
-					$this->minPrice = min($this->minPrice, round($item['price']['total'] * 0.75, 2));
 					
 					$this->minDurationSec = $this->minDuration * 60;
 					
-					$flights[] = [
-						'duration'         => $durationStr,
-						'durationSec'      => +$duration * 60,
-						'price'            => round($item['price']['total'] * 0.75, 2),
-						'price'            => $item['price'],
-						'travelerPricings' => $item['travelerPricings'],
-						'itineraries'      => $item['itineraries'],
-						'priceData'        => $item['price'],
-						'pricingOptions'   => $item['pricingOptions'],
-						'departure'        => $departure,
-						'arrival'          => $arrival,
-						'operating'        => array_unique($operating),
+					$tmp_flights[] = [
+						'duration'    => $durationStr,
+						'durationSec' => +$duration * 60,
+						
+						'itineraries' => $item['itineraries'],
+						
+						'departure' => $departure,
+						'arrival'   => $arrival,
+						
 					];
 				}
+				$this->minPrice = min($this->minPrice, round($item['price']['total'] * 0.75, 2));
 				
+				$flights[] = [
+					'tickets'          => $tmp_flights,
+					'priceTotal'       => round($item['price']['total'] * 0.75, 2),
+					'price'            => $item['price'],
+					'priceData'        => $item['price'],
+					'pricingOptions'   => $item['pricingOptions'],
+					'travelerPricings' => $item['travelerPricings'],
+					'operating' => array_unique($operating),
+					'duration'    => $durationStr,
+					'durationSec' => +$duration * 60,
+				];
 			}
 		}
 		$fastest  = $flights;
