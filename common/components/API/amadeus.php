@@ -212,7 +212,9 @@ class amadeus {
 						if (empty($arrival)) {
 							$arrival = $itinerarie['segments'][count($itinerarie['segments']) - 1]['arrival'];
 						}
-						$operating[] = $segment['operating']['carrierCode'];
+						if (isset($segment['operating'])) {
+							$operating[] = $segment['operating']['carrierCode'];
+						}
 					}
 					
 					$duration          = self::convertTime($itinerarie['duration']);
